@@ -62,7 +62,6 @@ class WebViewFragment(private val position: Int, private val webViewUrl: String)
 
             dialog.setView(editText)
             dialog.setPositiveButton("저장") { _, _ ->
-                //TODO 저장 기능
                 activity?.getSharedPreferences(SHARED_PREFERENCE, Context.MODE_PRIVATE)?.edit {
                     putString("tab${position}_name", editText.text.toString())
                     listener?.nameChanged(position, editText.text.toString())

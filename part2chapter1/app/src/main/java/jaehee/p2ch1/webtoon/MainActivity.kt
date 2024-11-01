@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), OnTabLayoutNameChanged {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val currentFragment =
-                    supportFragmentManager.fragments[binding.viewPager.currentItem] // TODO 수정 필요함. fragment 를 viewpager에서 가져와야 함.
+                    supportFragmentManager.fragments[binding.viewPager.currentItem]
                 if (currentFragment is WebViewFragment) {
                     if (currentFragment.canGoBack()) {
                         currentFragment.goBack()
