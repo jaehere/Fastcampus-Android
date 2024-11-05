@@ -12,7 +12,7 @@ class WaveformView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): View(context, attrs, defStyleAttr) {
+) : View(context, attrs, defStyleAttr) {
 
     private val ampList = mutableListOf<Float>()
     private val rectList = mutableListOf<RectF>()
@@ -21,32 +21,33 @@ class WaveformView @JvmOverloads constructor(
         color = Color.RED
     }
 
-    private val rectWidth = 10f
+    private val rectWidth = 15f
     private var tick = 0
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        for(rectF in rectList) {
+        for (rectF in rectList) {
             canvas?.drawRect(rectF, redPaint)
         }
     }
 
     fun addAmplitude(maxAmplitude: Float) {
+        val amplitude = (maxAmplitude / Short.MAX_VALUE) * this.height * 0.8f
 
-        ampList.add(maxAmplitude)
+        ampList.add(amplitude)
         rectList.clear()
 
         val maxRect = (this.width / rectWidth).toInt()
 
         val amps = ampList.takeLast(maxRect)
 
-        for ( (i,amp) in amps.withIndex()) {
+        for ((i, amp) in amps.withIndex()) {
             val rectF = RectF()
-            rectF.top = 0f
-            rectF.bottom = amp
+            rectF.top = (this.height / 2) - amp /2 - 3f
+            rectF.bottom = rectF.top + amp + 3f
             rectF.left = i * rectWidth
-            rectF.right = rectF.left + rectWidth
+            rectF.right = rectF.left + rectWidth - 5f // 여백을 위해 5를 더 줌
 
             rectList.add(rectF)
         }
@@ -54,18 +55,18 @@ class WaveformView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun replayAmplitude(duration: Int) {
+    fun replayAmplitude() {
         rectList.clear()
 
         val maxRect = (this.width / rectWidth).toInt()
         val amps = ampList.take(tick).takeLast(maxRect)
 
-        for ( (i,amp) in amps.withIndex()) {
+        for ((i, amp) in amps.withIndex()) {
             val rectF = RectF()
-            rectF.top = 0f
-            rectF.bottom = amp
+            rectF.top = (this.height / 2) - amp /2 + - 3f
+            rectF.bottom = rectF.top + amp + 3f
             rectF.left = i * rectWidth
-            rectF.right = rectF.left + rectWidth
+            rectF.right = rectF.left + rectWidth - 5f
 
             rectList.add(rectF)
         }

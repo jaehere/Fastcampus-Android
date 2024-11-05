@@ -58,9 +58,7 @@ class MainActivity : AppCompatActivity(), OnTimerTickListener {
                 State.PLAYING -> {
 
                 }
-
             }
-
         }
 
         binding.playButton.setOnClickListener {
@@ -68,21 +66,24 @@ class MainActivity : AppCompatActivity(), OnTimerTickListener {
                 State.RELEASE -> {
                     onPlay(true)
                 }
+
                 else -> {
-                //do nothing
+                    //do nothing
                 }
-
             }
-
         }
 
-        binding.stopButton.setOnClickListener{
-            when(state) {
+        binding.playButton.isEnabled = false
+        binding.playButton.alpha = 0.3f
+
+        binding.stopButton.setOnClickListener {
+            when (state) {
                 State.PLAYING -> {
                     onPlay(false)
                 }
+
                 else -> {
-                //do nothing
+                    //do nothing
                 }
             }
         }
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity(), OnTimerTickListener {
                     arrayOf(android.Manifest.permission.RECORD_AUDIO),
                     REQUEST_CODE_AUDIO_CODE
                 )
-            }.setNegativeButton("취소") { dialogInterface, _ ->
+            }.setNegativeButton(getString(R.string.cancel)) { dialogInterface, _ ->
                 dialogInterface.cancel()
             }.show()
 
@@ -137,7 +138,7 @@ class MainActivity : AppCompatActivity(), OnTimerTickListener {
         stopRecording()
     }
 
-    private fun onPlay(start: Boolean) = if(start) startPlaying() else stopPlaying()
+    private fun onPlay(start: Boolean) = if (start) startPlaying() else stopPlaying()
 
     private fun startRecording() {
         state = State.RECORDING
@@ -246,10 +247,10 @@ class MainActivity : AppCompatActivity(), OnTimerTickListener {
 
     private fun showPermissionSettingDialog() {
         AlertDialog.Builder(this)
-            .setMessage("녹음 권한을 허용해야 앱을 정상적으로 사용할 수 있습니다. 앱 설정 화면으로 진입해서 권한을 켜주세요.")
+            .setMessage(getString(R.string.permission_setting_message))
             .setPositiveButton("권한 변경하러 가기") { _, _ ->
                 navigateToAppSetting()
-            }.setNegativeButton("취소") { dialogInterface, _ ->
+            }.setNegativeButton(getString(R.string.cancel)) { dialogInterface, _ ->
                 dialogInterface.cancel()
             }.show()
     }
@@ -295,10 +296,11 @@ class MainActivity : AppCompatActivity(), OnTimerTickListener {
         val second = (duration / 1000) % 60
         val minute = (duration / 1000 / 60)
 
-        binding.timerTextView.text = String.format("%02d:%02d.%02d", minute, second, millisecond / 10 )
+        binding.timerTextView.text =
+            String.format(getString(R.string.timeFormat), minute, second, millisecond / 10)
 
-        if(state == State.PLAYING) {
-            binding.waveformView.replayAmplitude(duration.toInt())
+        if (state == State.PLAYING) {
+            binding.waveformView.replayAmplitude()
         } else if (state == State.RECORDING) {
             binding.waveformView.addAmplitude(recorder?.maxAmplitude?.toFloat() ?: 0f)
         }

@@ -22,6 +22,7 @@ class Timer(listener: OnTimerTickListener){
 
     fun stop() {
         handler.removeCallbacks(runnable)
+        duration = 0
     }
 }
 
