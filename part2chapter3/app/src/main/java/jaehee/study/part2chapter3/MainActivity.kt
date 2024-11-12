@@ -2,53 +2,73 @@ package jaehee.study.part2chapter3
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.io.PrintWriter
-import java.net.ServerSocket
+import java.net.Socket
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Thread{
-            val port = 8080
-            val server = ServerSocket(port)
 
-            val socket = server.accept()
+        val client = OkHttpClient()
 
-            //스트림은 일방통행, 인풋, 아웃풋 각각 운용해야 한다. 인풋으로 들어온건 아웃풋으로 나간다.
-            socket.getInputStream() //클라이언트로부터 들어오는 스트림 == 클라이언트의 socket.outputStream
-            socket.getOutputStream() //클라이언트에게 데이터를 주는 스트림 == 클라이언트의 socket.inputStream
+        val request: Request = Request.Builder()
+            .url("http://10.0.2.2:8080") //emulator
+            .build()
 
-            val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
-            val printer = PrintWriter(socket.getOutputStream())
-
-            var input: String? = "-1"
-
-            while(input != null && input != ""){
-                input = reader.readLine()
+        val callback = object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("Client", e.toString())
             }
 
-            Log.e("SERVER", "READE DATA $input")
+            override fun onResponse(call: Call, response: Response) {
 
-            printer.println("HTTP/1.1 200 OK")
-            printer.println("Content-Type: text/html\r\n")
+                if(response.isSuccessful) {
+                    Log.e("Client", "${response.body?.string()}")
+                }
+            }
+        }
 
-            printer.println("<h1>Hello World</h1>")
-            printer.println("\r\n")
-            printer.flush() //잔여 버퍼링 데이터가 있을 수 있으니 flush로 마저 배출
-            printer.close()
+        client.newCall(request).enqueue(callback)  //execute는 동기함수. 블락
 
-            reader.close()
+//        val httpURLConnection = HttpURLConnection(URL("https://naver.com"))
+//        httpURLConnection.connect()
 
-            socket.close()
-        }.start()
+        /*Thread{
+            try{
+                val socket = Socket("10.0.2.2", 8080) //emulator 한정
+                val printer = PrintWriter(socket.getOutputStream())
+                val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
+
+                printer.println("GET / HTTP/1.1")
+                printer.println("Host: 127.0.0.1:8080")
+                printer.println("User-Agent: android")
+                printer.println("\r\n")
+                printer.flush()
+
+                var input: String? = "-1"
+                while(input != null) {
+                    input = reader.readLine()
+                    Log.e("Client", input)
+                }
+                reader.close()
+                printer.close()
+                socket.close()
+            }catch (e: Exception) {
+                Log.e("Cliente", e.toString())
+            }
+        }.start()*/
 
     }
 }
