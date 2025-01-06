@@ -12,15 +12,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import jaehee.study.part2chapter4_retrofit.adapter.UserAdapter
 import jaehee.study.part2chapter4_retrofit.databinding.ActivityMainBinding
-import jaehee.study.part2chapter4_retrofit.model.Repo
 import jaehee.study.part2chapter4_retrofit.model.UserDto
 import jaehee.study.part2chapter4_retrofit.network.GithubService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 
 class MainActivity : AppCompatActivity() {
