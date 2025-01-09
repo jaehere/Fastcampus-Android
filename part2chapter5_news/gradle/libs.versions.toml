@@ -11,9 +11,11 @@ material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
 retrofit = "2.11.0"
+roomCompiler = "2.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 annotation = { module = "com.tickaroo.tikxml:annotation", version.ref = "annotation" }
 core = { module = "com.tickaroo.tikxml:core", version.ref = "annotation" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
