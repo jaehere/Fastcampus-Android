@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.jsoup)
     implementation(libs.glide)
 
+    implementation(libs.lottie)
+
     kapt(libs.processor)
 
     testImplementation(libs.junit)

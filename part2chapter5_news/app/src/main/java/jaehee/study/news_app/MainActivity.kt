@@ -1,11 +1,13 @@
 package jaehee.study.news_app
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
@@ -35,7 +37,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter { url ->
+            Log.e("url", url)
+            startActivity(
+                Intent(this, WebViewActivity::class.java).apply {
+                    putExtra("url", url)
+                }
+            )
+        }
         val newsService = retrofit.create(NewsService::class.java)
 
         binding.newsRecyclerView.apply {
@@ -81,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.searchTextInputEditText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 binding.chipGroup.clearCheck()
 
                 binding.searchTextInputEditText.clearFocus()
@@ -110,6 +119,8 @@ class MainActivity : AppCompatActivity() {
                 val list = response.body()?.channel?.items.orEmpty().transform()
                 newsAdapter.submitList(list)
 
+                binding.notFoundView.isVisible = list.isEmpty()
+
                 //Google News 에서 og:image 를 일괄로 Google News 로고로 변경하여 데이터가 잘 노출되지 않을 수 있음!
                 //프로젝트이기 때문에 Google News 로고라도 잘 나오면 성공이지만, 실제 데이터가 나오는 것을 테스트 해보고 싶으시다면, Google News 의 RSS 피드 대신 다른 언론사의 RSS 피드로 테스트해보실 것을 권장드립니다.
 
@@ -122,10 +133,10 @@ class MainActivity : AppCompatActivity() {
                             val ogImageNode = elements.find { node ->
                                 node.attr("property") == "og:image"
                             }
-                            news.imageUrl =  ogImageNode?.attr("content")
+                            news.imageUrl = ogImageNode?.attr("content")
 
-                            Log.d("MainActivity","imageUrl: ${news.imageUrl}")
-                        }catch (e: Exception){
+                            //Log.d("MainActivity","imageUrl: ${news.imageUrl}")
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
                         runOnUiThread {
