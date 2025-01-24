@@ -1,6 +1,8 @@
 [versions]
 agp = "8.6.1"
 annotation = "0.8.13"
+glide = "4.16.0"
+jsoup = "1.18.3"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -18,6 +20,8 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 annotation = { module = "com.tickaroo.tikxml:annotation", version.ref = "annotation" }
 core = { module = "com.tickaroo.tikxml:core", version.ref = "annotation" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

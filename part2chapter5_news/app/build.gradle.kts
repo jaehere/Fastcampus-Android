@@ -53,6 +53,10 @@ dependencies {
     implementation(libs.annotation)
     implementation(libs.core)
     implementation(libs.retrofit.converter)
+
+    implementation(libs.jsoup)
+    implementation(libs.glide)
+
     kapt(libs.processor)
 
     testImplementation(libs.junit)

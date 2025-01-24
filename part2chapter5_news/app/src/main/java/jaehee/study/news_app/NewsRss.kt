@@ -26,4 +26,5 @@ data class NewsItem(
 
     @PropertyElement(name = "link")
     val link: String? = null,
+
 )
