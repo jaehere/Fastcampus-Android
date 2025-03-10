@@ -2,12 +2,13 @@ package jaehee.study.part2chapter6_chatting_app
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import jaehee.study.part2chapter6_chatting_app.Key.Companion.DB_USERS
 import jaehee.study.part2chapter6_chatting_app.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -54,9 +55,19 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "이메일 또는 패스워드가 입력되지 않았습니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             Firebase.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
+                    val currentUSer = Firebase.auth.currentUser
+                    if (task.isSuccessful && currentUSer != null) {
+                        val userId = currentUSer.uid
+
+                        val user = mutableMapOf<String, Any>()
+                        user["userId"] = userId
+                        user["username"] = email
+
+                        Firebase.database.reference.child(DB_USERS).child(userId).updateChildren(user)
+
                         // 로그인 성공
                         Toast.makeText(this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, MainActivity::class.java)

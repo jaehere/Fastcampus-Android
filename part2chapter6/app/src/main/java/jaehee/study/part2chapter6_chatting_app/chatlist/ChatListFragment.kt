@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import jaehee.study.part2chapter6_chatting_app.R
 import jaehee.study.part2chapter6_chatting_app.databinding.FragmentChatlistBinding
-import jaehee.study.part2chapter6_chatting_app.databinding.FragmentUserlistBinding
 
 class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
 

@@ -10,6 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import jaehee.study.part2chapter6_chatting_app.chatlist.ChatListFragment
 import jaehee.study.part2chapter6_chatting_app.databinding.ActivityMainBinding
+import jaehee.study.part2chapter6_chatting_app.mypage.MyPageFragment
 import jaehee.study.part2chapter6_chatting_app.userlist.UserFragment
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val userFragment = UserFragment()
     private val chatListFragment = ChatListFragment()
+    private val myPageFragment = MyPageFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.myPage -> {
+                    replaceFragment(myPageFragment)
                     return@setOnItemSelectedListener true
                 }
                 else -> {
