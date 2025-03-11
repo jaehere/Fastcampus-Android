@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import jaehee.study.part2chapter6_chatting_app.Key.Companion.DB_USERS
 import jaehee.study.part2chapter6_chatting_app.databinding.ActivityLoginBinding
 
@@ -62,23 +63,28 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful && currentUSer != null) {
                         val userId = currentUSer.uid
 
-                        val user = mutableMapOf<String, Any>()
-                        user["userId"] = userId
-                        user["username"] = email
+                        Firebase.messaging.token.addOnCompleteListener {
+                            val token = it.result
 
-                        Firebase.database.reference.child(DB_USERS).child(userId).updateChildren(user)
+                            val user = mutableMapOf<String, Any>()
+                            user["userId"] = userId
+                            user["username"] = email
+                            user["fcmToken"] = token
 
-                        // 로그인 성공
-                        Toast.makeText(this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-
+                            Firebase.database.reference.child(DB_USERS).child(userId)
+                                .updateChildren(user)
+                            // 로그인 성공
+                            Toast.makeText(this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }.addOnFailureListener {
+                            //실패 처리
+                        }
                     } else {
                         // 로그인 실패
                         Log.e("LoginActivity", "로그인 실패 원인: ${task.exception.toString()}")
-                        Toast.makeText(this, "로그인에 실패했습니다. ${task.exception}", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this, "로그인에 실패했습니다. ${task.exception}", Toast.LENGTH_SHORT).show()
                     }
 
                 }
